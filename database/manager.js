@@ -20,23 +20,25 @@ module.exports = class Manager {
   static async findServer(id) {
 
     var sql =
-      "SELECT id FROM Servers (id, prefix) VALUES ("+"'"+id+"'"+", NULL)";
+      "SELECT id FROM Servers (id, prefix)";
     connection.query(sql, function (err, result, fields) {
       if (err) console.log(err);
       else{
-        console.log("1 record inserted");
+        console.log(result);
         return result;
       }
     });
-    const result = await Server.findOne({ serverId: id });
-
-    return result;
   }
 
   static async getPrefix(id) {
-    const result = await Server.findOne({ serverId: id });
-
-    return result.prefix;
+    sql = "SELECT prefix FROM Servers WHERE id ="+id+""
+  connection.query(sql, function (err, result, fields) {
+    if (err) console.log(err);
+    else{
+      console.log(result);
+      return result;
+    }
+  });
   }
 
   static async updateServerPrefix(id, prefix) {
