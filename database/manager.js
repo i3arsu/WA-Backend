@@ -18,6 +18,16 @@ module.exports = class Manager {
     // return result;
   }
   static async findServer(id) {
+
+    var sql =
+      "SELECT id FROM Servers (id, prefix) VALUES ("+"'"+id+"'"+", NULL)";
+    connection.query(sql, function (err, result, fields) {
+      if (err) console.log(err);
+      else{
+        console.log("1 record inserted");
+        return result;
+      }
+    });
     const result = await Server.findOne({ serverId: id });
 
     return result;
