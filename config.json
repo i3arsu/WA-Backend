@@ -1,3 +1,15 @@
 {
-    "token":"OTcxMzY3MDQxNzc4OTk5MzI2.G1g6mj.9mSfb3YFmRScJiITRxafGQEhPqz5zxHbZx8yfE"
+    
+"token":"OTcxMzY3MDQxNzc4OTk5MzI2.G3hIWk.GBBaPHqwVklEr_GU4DN8r1xtaeb-jBWL5sHuEg",
+
+"client_id":"971367041778999326",
+"client_secret":"194OL8jxsn6jWeAbRE6dKVykE7z-3v4J",
+
+"host":"sql11.freesqldatabase.com",
+"user":"sql11494824",
+"password":"tjs2CYq54C",
+
+"port":"3000",
+
+"callback_url":"http://localhost:3000/login"
 }
