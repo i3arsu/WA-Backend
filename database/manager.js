@@ -1,4 +1,3 @@
-const Server = null
 
 module.exports = class Manager {
   static async createServer(id, connection) {
@@ -17,37 +16,32 @@ module.exports = class Manager {
 
     // return result;
   }
-  static async findServer(id) {
+  static async findServer(id, connection) {
+    var sql = "SELECT * FROM Servers WHERE id="+id
+    const temp = await connection.query(sql, function (err, result1, fields) {
+      if (err) console.log(err);
+      return result1;
+    });
+    console.log(temp)
+    return temp;
+  }
 
+  static async getPrefix(id, connection) {
     var sql =
-      "SELECT id FROM Servers (id, prefix)";
+      "SELECT prefix FROM Servers WHERE id="+id;
     connection.query(sql, function (err, result, fields) {
       if (err) console.log(err);
       else{
-        console.log(result);
         return result;
       }
     });
   }
 
-  static async getPrefix(id) {
-    sql = "SELECT prefix FROM Servers WHERE id ="+id+""
-  connection.query(sql, function (err, result, fields) {
-    if (err) console.log(err);
-    else{
-      console.log(result);
-      return result;
-    }
-  });
-  }
-
-  static async updateServerPrefix(id, prefix) {
-    const result = await Server.findOne({ serverId: id });
-
-    if (result) {
-      return await result.updateOne({ prefix });
-    } else {
-      return;
-    }
+  static async updateServerPrefix(id, prefix, connection) {
+    var sql = "UPDATE Servers SET prefix ='"+prefix+"' WHERE id="+id
+    connection.query(sql, function (err, result, fields) {
+      if (err) console.log(err);
+      else console.log("Prefix updated successfully!");
+    });
   }
 };
