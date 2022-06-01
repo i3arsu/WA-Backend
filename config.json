@@ -5,11 +5,11 @@
 "client_id":"971367041778999326",
 "client_secret":"194OL8jxsn6jWeAbRE6dKVykE7z-3v4J",
 
-"host":"sql11.freesqldatabase.com",
-"user":"sql11494824",
-"password":"tjs2CYq54C",
+"host":"192.168.0.25",
+"user":"user1",
+"password":"rwk4ULG2",
 
-"port":"3000",
+"port":"3306",
 
 "callback_url":"http://localhost:3000/login"
 }

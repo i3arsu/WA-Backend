@@ -4,6 +4,7 @@ const {
   Formatters,
   Intents,
   Constants,
+  Permissions,
 } = require("discord.js");
 const { stripIndents } = require("common-tags");
 const mysql = require("mysql");
@@ -14,7 +15,7 @@ var connection = mysql.createConnection({
   host: config.host,
   user: config.user,
   password: config.password,
-  database: "sql11494824",
+  database: "discordBot",
 });
 
 const client = new Client({
@@ -44,7 +45,8 @@ client.on("ready", async () => {
 
   connection.connect((error) => {
     if (error) {
-      console.log("Error connecting to the MySQL Database");
+      console.log(error)
+      // console.log("Error connecting to the MySQL Database");
       return;
     }
     var sql = "CREATE TABLE Servers (id VARCHAR(255), prefix CHAR)";
@@ -88,7 +90,7 @@ client.on("interactionCreate", async (interaction) => {
 
       if (subCommand === "view") {
         const server = await db.findServer(interaction.guild.id, connection);
-		// console.log(server)
+        // console.log(server)
 
         await interaction.followUp({
           content: `The prefix for this server ${
@@ -96,6 +98,35 @@ client.on("interactionCreate", async (interaction) => {
           }`,
         });
       } else if (subCommand === "set") {
+        const prefix = interaction.options.getString("value");
+        if (prefix.length > 3)
+          return interaction.followUp({
+            content: "The prefix cannot be more than **3** characters long!",
+          });
+
+        await db.updateServerPrefix(interaction.guild.id, prefix, connection);
+
+        return await interaction.followUp({
+          content: `Successfully set **${interaction.guild.name}**'s prefix to **\`${prefix}\`**`,
+        });
+      }
+    } else if (interaction.commandName === "role") {
+      await interaction.deferReply();
+      const subCommand = interaction.options.getSubcommand();
+
+      if (subCommand === "add") {
+        const roleName = interaction.options.getString("value");
+        var role = member.guild.roles.cache.find(
+          (role) => role.name === roleName
+        );
+        member.roles.add(role);
+
+        await interaction.followUp({
+          content: `Added role:  ${
+            role ? `to **\`${interaction.user.name}\`**` : ""
+          }`,
+        });
+      } else if (subCommand === "remove") {
         const prefix = interaction.options.getString("value");
         if (prefix.length > 3)
           return interaction.followUp({
@@ -138,3 +169,7 @@ client.on("interactionCreate", async (interaction) => {
 });
 
 client.login(config.token);
+
+// Clear messages
+// Mute people
+// Log kicked and banned users
