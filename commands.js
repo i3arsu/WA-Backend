@@ -1,76 +1,22 @@
-const {
-  SlashCommandBuilder,
-  ContextMenuCommandBuilder,
-} = require("@discordjs/builders");
-const { REST } = require("@discordjs/rest");
-const { Routes } = require("discord-api-types/v9");
-const config = require("./config.json");
+const fs = require('node:fs');
+const path = require('node:path');
+const { REST } = require('@discordjs/rest');
+const { Routes } = require('discord-api-types/v9');
+const config = require('./config.json');
 
-const deploy = async () => {
-  const commands = [
-    new SlashCommandBuilder()
-      .setName("ping")
-      .setDescription("Returns the ping."),
-    new SlashCommandBuilder()
-      .setName("prefix")
-      .setDescription("Manages the bot prefix.")
-      .addSubcommand((sc) =>
-        sc.setName("view").setDescription("Views the current prefix.")
-      )
-      .addSubcommand((sc) =>
-        sc
-          .setName("set")
-          .setDescription("Sets the prefix to a new one.")
-          .addStringOption((string) =>
-            string
-              .setName("value")
-              .setDescription("The new prefix.")
-              .setRequired(true)
-          )
-      ),
-    new SlashCommandBuilder()
-      .setName("role")
-      .setDescription("Manages the user roles.")
-      .addSubcommand((sc) =>
-        sc
-          .setName("add")
-          .setDescription("Adds role to user.")
-          .addStringOption((string) =>
-            string
-              .setName("value")
-              .setDescription("The role you want to add")
-              .setRequired(true)
-          )
-      )
-      .addSubcommand((sc) =>
-        sc
-          .setName("remove")
-          .setDescription("Removes the user from the role.")
-          .addStringOption((string) =>
-            string
-              .setName("value")
-              .setDescription("The role you want to remove")
-              .setRequired(true)
-          )
-      ),
-    new ContextMenuCommandBuilder().setName("User Info").setType(2),
-  ].map((cmd) => cmd.toJSON());
+const commands = [];
+const commandsPath = path.join(__dirname, 'commands');
+const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+const rest = new REST({ version: '9' }).setToken(config.token);
 
-  const rest = new REST({ version: "9" }).setToken(config.token);
+for (const file of commandFiles) {
+	const filePath = path.join(commandsPath, file);
+	const command = require(filePath);
+	commands.push(command.data.toJSON());
 
-  try {
-    const clientId = config.client_id;
 
-    console.log("Started refreshing Slash Commands and Context Menus...");
 
-    await rest
-      .put(Routes.applicationCommands(clientId), { body: commands })
-      .then(() => {
-        console.log("Slash Commands and Context Menus have now been deployed.");
-      });
-  } catch (e) {
-    console.error(e);
-  }
-};
-
-deploy();
+rest.put(Routes.applicationCommands(config.client_id), { body: commands })
+	.then(() => console.log('Successfully registered application commands.'))
+	.catch(console.error);
+}
