@@ -1,6 +1,7 @@
 require("dotenv").config();
 const config = require("./config.json");
 const path = require("node:path");
+const Server = require("./models/Server");
 
 const {
   Client,
@@ -50,7 +51,6 @@ const cmdload = async () => {
     // Set a new item in the Collection
     // With the key as the command name and the value as the exported module
     client.commands.set(command.data.name, command);
-
   }
 };
 
@@ -59,6 +59,23 @@ client.on("error", console.error);
 
 client.on("ready", async () => {
   console.log("Ziv sam!");
+  const webPortal = require('./server');
+	webPortal.load(client);
+});
+
+client.on('guildCreate', async guild => {
+	if (!guild.available) return;
+  const guildId = guild.id
+  const guildName = guild.name
+
+	const newServer = await Server.create({
+    guildId,
+    guildName
+  });
+  
+  await newServer.save();
+
+	console.log(`Joined server: ${guild.name}`);
 });
 
 client.on("interactionCreate", async (interaction) => {

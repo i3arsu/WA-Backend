@@ -20,6 +20,7 @@ module.exports = {
       }
 
       const serverId = interaction.guild.id;
+      const channelId = interaction.channel.id;
 
       const newTask = await Task.create({
         text,
@@ -28,13 +29,14 @@ module.exports = {
       });
 
       await newTask.save();
-      const channel = channels.cache.get(interaction.channel)
 
       const embed = new MessageEmbed()
         .setColor("#0099ff")
         .setTitle("Added")
-        .setDescription(`Task ${newTask.text} was added`);
-      return client.Channel.send({embeds: [embed]});
+        .setDescription(`${newTask.text}`);
+        interaction.reply("Task created Successfully")
+        return client.channels.cache.get(channelId).send({embeds: [embed]});
+        //return interaction.reply({embeds: embed})
     } catch (error) {
       console.error(error.toString());
       return interaction.reply("Couldn't create task");
