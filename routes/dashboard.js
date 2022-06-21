@@ -6,7 +6,6 @@ require('moment-duration-format');
 
 const router = express.Router();
 
-const db = require('../config/sequelize');
 const checkAuth = require('../auth/CheckAuth');
 
 
@@ -57,7 +56,7 @@ router.get('/server/:guildID/profile', checkAuth, async (req, res) => {
 		userFlags = [];
 	}
 
-	res.render('dashboard/profile', {
+	res.render('dash/profile', {
 		tag: (req.user ? req.user.tag : 'Login'),
 		bot: req.client,
 		userObj: userObj,
@@ -72,13 +71,13 @@ router.get('/server/:guildID/profile', checkAuth, async (req, res) => {
 
 router.get('/server/:guildID', checkAuth, async (req, res) => {
 	const guildID = req.params.guildID
-	const server = req.client.guilds.cache.get(guildId);
+	const server = req.client.guilds.cache.get(guildID);
 	
 	
 	const serverData = await Server.findByPk(guildID)
 
 	if (!server && req.user.guilds.filter(u => ((u.permissions & 2146958591) === 2146958591)).map(u => u.id).includes(req.params.guildID)) {
-		return res.redirect(`https://discord.com/oauth2/authorize?client_id=${req.client.user.id}&scope=bot%20applications.commands&permissions=1094679657975&guild_id=${req.params.guildID}`);
+		return res.redirect(`https://discord.com/oauth2/authorize?client_id=${req.client.user.id}&scope=bot%20applications.commands&permissions=8&${req.params.guildID}`);
 	}
 	else if (!server) {
 		return res.redirect('/dashboard/servers');
@@ -106,7 +105,7 @@ router.get('/server/:guildID/members', checkAuth, async (req, res) => {
 	const server = req.client.guilds.cache.get(req.params.guildID);
 
 	if (!server && req.user.guilds.filter(u => ((u.permissions & 2146958591) === 2146958591)).map(u => u.id).includes(req.params.guildID)) {
-		return res.redirect(`https://discord.com/oauth2/authorize?client_id=${req.client.user.id}&scope=bot%20applications.commands&permissions=1094679657975&guild_id=${req.params.guildID}`);
+		return res.redirect(`https://discord.com/oauth2/authorize?client_id=${req.client.user.id}&scope=bot%20applications.commands&permissions=8&guild_id=${req.params.guildID}`);
 	}
 	else if (!server) {
 		return res.redirect('/dashboard/servers');
@@ -127,7 +126,7 @@ router.get('/server/:guildID/stats', checkAuth, async (req, res) => {
 	const server = req.client.guilds.cache.get(req.params.guildID);
 
 	if (!server && req.user.guilds.filter(u => ((u.permissions & 2146958591) === 2146958591)).map(u => u.id).includes(req.params.guildID)) {
-		return res.redirect(`https://discord.com/oauth2/authorize?client_id=${req.client.user.id}&scope=bot%20applications.commands&permissions=1094679657975&guild_id=${req.params.guildID}`);
+		return res.redirect(`https://discord.com/oauth2/authorize?client_id=${req.client.user.id}&scope=bot%20applications.commands&permissions=8&guild_id=${req.params.guildID}`);
 	}
 	else if (!server) {
 		return res.redirect('/dashboard/servers');

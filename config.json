@@ -1,17 +1,18 @@
+
 {
     
-"token":"OTcxMzY3MDQxNzc4OTk5MzI2.G-qkvL.f7tqpNE7FWsRgfYx2fq3KrcTx8TYoCZiIbpAIQ",
-
-"client_id":"971367041778999326",
-"client_secret":"194OL8jxsn6jWeAbRE6dKVykE7z-3v4J",
-
-"host":"192.168.0.24",
-"user":"user1",
-"password":"rwk4ULG2",
-
-"port":"3306",
-
-"webPort":"3000",
-
-"callback_url":"http://localhost:3000/login"
-}
+    "token":"",
+    
+    "client_id":"",
+    "client_secret":"",
+    
+    "host":"",
+    "user":"",
+    "password":"",
+    
+    "port":"3306",
+    
+    "webPort":"3000",
+    
+    "callback_url":"http://localhost:3000/login"
+    }

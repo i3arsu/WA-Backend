@@ -65,12 +65,12 @@ client.on("ready", async () => {
 
 client.on('guildCreate', async guild => {
 	if (!guild.available) return;
-  const guildId = guild.id
-  const guildName = guild.name
+  const serverId = guild.id
+  const serverName = guild.name
 
 	const newServer = await Server.create({
-    guildId,
-    guildName
+    serverId,
+    serverName
   });
   
   await newServer.save();

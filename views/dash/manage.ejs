@@ -1,3 +1,5 @@
+<%- include("../header") %>
+
 <title>Manage | <%= guild.name %> » <%= bot.user.username %> Dashboard</title>
 
 <section class="hero is-medium is-black" style="padding-top: 50px; padding-bottom: 50px;">
@@ -39,8 +41,6 @@
         <h1 class="is-size-3 has-text-white">
             <i class="fas fa-gear" style="padding-right: 5px;"></i> Edit Settings
         </h1>
-        <label class="is-size-4 has-text-white">Prefix</label>
-        <input class="input is-medium" name="prefix" type="text" placeholder="<%= serverData.prefix ? serverData.prefix : '' %>">
         <br>
         <br>
         <button type="submit" class="button is-warning is-rounded is-small is-link"><i class="fas fa-paper-plane" style="padding-right: 5px;"></i> Save Changes</button>
