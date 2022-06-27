@@ -1,14 +1,12 @@
-
 {
+    "token":"OTcxMzY3MDQxNzc4OTk5MzI2.GIwPvZ.0RAaAoFEF4cF8lWlEN1wGiK7kTUHz7X5eu3x98",
     
-    "token":"",
+    "client_id":"971367041778999326",
+    "client_secret":"194OL8jxsn6jWeAbRE6dKVykE7z-3v4J",
     
-    "client_id":"",
-    "client_secret":"",
-    
-    "host":"",
-    "user":"",
-    "password":"",
+    "host":"192.168.0.24",
+    "user":"user1",
+    "password":"rwk4ULG2",
     
     "port":"3306",
     
