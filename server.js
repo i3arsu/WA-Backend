@@ -13,8 +13,8 @@ module.exports.load = async (client) => {
 	app.use(bodyparser.urlencoded({ extended: true }));
 	app.engine('html', ejs.renderFile);
 	app.set('view engine', 'ejs');
-	app.set('views', path.join(__dirname, '/views'));
-	app.use(express.static(path.join(__dirname, '/css')));
+	app.set('views', path.join(__dirname, '/Frontend/views'));
+	app.use(express.static(path.join(__dirname, '/Frontend/css')));
 	app.use(session({
 		secret: 'Test',
 		resave: false,
@@ -46,15 +46,8 @@ module.exports.load = async (client) => {
 		});
 	}));
 
-	app.use('/', require('./routes/index'));
-	app.use('/dashboard', require('./routes/dashboard'));
-
-	app.get('*', (req, res) => {
-		res.render('../views/404', {
-			bot: req.client,
-			user: req.user,
-		});
-	});
+	app.use('/', require('./Frontend/routes/index'));
+	app.use('/dashboard', require('./Frontend/routes/dashboard'));
 
 	app.listen(config.webPort, () => {
 		console.log(`Webserver now online on port ${config.webPort}`);

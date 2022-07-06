@@ -1,0 +1,130 @@
+<%- include("../header") %>
+
+<title>Members | <%= guild.name %> » <%= bot.user.username %> Dashboard</title>
+
+<section class="hero is-medium is-black" style="padding-top: 50px; padding-bottom: 50px;">
+    <div class="container">
+        <figure class="image is-128x128 has-image-centered">
+            <img class="is-rounded" src="<%= guild.icon ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}?size=512` : 'https://i.imgur.com/RO3uUxX.png' %>">
+        </figure>
+        <br>
+        <h1 class="is-size-1">
+            <strong class="has-text-white"><%= guild.name %> Task List</strong>
+            <hr style="background-color: dimgray">
+            <div class="columns is-centered">
+                <div class="field is-grouped has-image-centered">
+                    <p class="control">
+                        <a href="/dashboard/server/<%= guild.id %>" class="button is-sm is-rounded is-white">
+                            <i class="fa-solid fa-angles-left" style="padding-right: 5px;"></i> Go back?
+                        </a>
+                    </p>
+            </div>
+        </h1>
+    </div>
+</section>
+
+<div class="container" style="padding-top: 50px; padding-bottom: 30px;">
+
+    <div class="row">
+        <div class="container">
+          <table class="table text-light is-fullwidth" id="searchTable"> 
+            <thead class="thead has-text-centered">
+              <tr>
+                <th style="font-size: 20px;" scope="col">Task ID</th>
+                <th style="font-size: 20px;" scope="col">Text</th>
+                <th style="font-size: 20px;" scope="col">Assigned To</th>
+                <th style="font-size: 20px;" scope="col">Is finished?</th>
+                <th style="font-size: 20px;" scope="col">Date Created</th>
+                <th style="font-size: 20px;" scope="col">Date Completed</th>
+              </tr>
+            </thead>
+            <%const allUsers = []%>
+            <%const userData = []%>
+            <% for (let i = 0; i < tasks.length; i++) { %>
+                <% const currUser = bot.users.cache.get(tasks[i].assignTo);%>
+                <% if (currUser){ %> 
+                    <%const tempIndex = allUsers.indexOf(currUser.username);%>
+                    <%if (tempIndex == -1){ %>
+                        <% allUsers.push(currUser.username);%>
+                        <% userData.push(1);%>
+                    <%}else userData[tempIndex] += 1%>
+                <%}%>
+                <tr>
+                    <td style="font-size: 20px;">
+                        <%=tasks[i].id%>
+                    </td>
+                    <td style="font-size: 20px;">
+                        <%=tasks[i].text%>
+                    </td>
+                    <td style="font-size: 20px;">
+                        <% if (currUser) { %>
+                            <%=currUser.username%>
+                        <% }%>
+                    </td>
+                    <td style="font-size: 20px;">
+                        <%=tasks[i].isDone%>
+                    </td>
+                    <td style="font-size: 20px;">
+                        <%=moment( tasks[i].dateCreated).format("dddd MMMM Do YYYY, h:mm a")%>
+                    </td>
+                    <td style="font-size: 20px;">
+                        <% if(tasks[i].isDone){%>
+                        <%=moment( tasks[i].dateCompleted).format("dddd MMMM Do YYYY, h:mm a")%>
+                        <%}%>
+                    </td>
+                </tr>
+            <% } %>
+            <% const sum = userData.reduce((x,y)=>x+y,0);
+            const undef = tasks.length - sum;
+            if (undef > 0){
+                allUsers.push("Unassigned")
+                userData.push(undef)
+            } 
+            %>
+          </table>
+        </div>
+      </div>
+</div>
+<div class="chart-container" style="margin:auto;position: relative; height:30vh; width:30vw">
+    <canvas id="myChart"></canvas>
+</div> 
+
+<script>
+    const ctx = document.getElementById('myChart').getContext('2d');
+
+    console.log("<%=undef%>")
+    
+    function generateRandomColor(str) {
+        var hash = 0;
+        for (var i = 0; i < str.length; i++) {
+            hash = str.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        var colour = "#";
+        for (var i = 0; i < 3; i++) {
+            var value = (hash >> (i * 8)) & 0xff;
+            colour += ("00" + value.toString(16)).substr(-2);
+        }
+        return colour;
+    }
+
+    const myChart = new Chart(ctx, {
+        type: 'doughnut',
+        label:"Graf",
+        data: {
+            labels:"<%=allUsers%>".split(","),
+            datasets: [{
+                label: 'Roles',
+                data: "<%=userData%>".split(","),
+                backgroundColor: "<%=allUsers%>".split(",").map((username)=>generateRandomColor(username)),
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
